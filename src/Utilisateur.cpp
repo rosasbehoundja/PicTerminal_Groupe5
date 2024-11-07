@@ -191,11 +191,18 @@ void Utilisateur::afficherGalerie() const
             cout << "\t" << left << setw(5) << idImage << setw(25) << titre << setw(20) << idCategories << right << setw(10) << nbr_telechargement << setw(15) << endl;
             cout << "\t" << string(75, '-') << endl;
         }
-        
-
     }
     image_data.close();
     return;
+}
+
+void Utilisateur::telechargerImage() const
+{
+
+}
+void Utilisateur::televerserImage() const
+{
+
 }
 
 

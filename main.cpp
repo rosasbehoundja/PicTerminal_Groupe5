@@ -2,11 +2,17 @@
 #include <cstdlib>
 
 #include "Utilisateur.h"
+#include "Image.h"
 
 using namespace std;
 
 int main()
 {
+        Image Photo;
+        Photo.SetNbr_telechargement();
+        cout << Photo.GetNbr_telechargement() << endl;
+        Photo.afficherDetails();
+        /*
         Utilisateur Profil;
         string option;
 
@@ -26,7 +32,7 @@ int main()
         cin >> option;
 
         if (option=="1")
-        {       
+        {
                 system("clear");
                 Profil = Profil.seConnecter();
         }
@@ -35,11 +41,12 @@ int main()
                 system("clear");
                 Profil = Profil.Inscription();
         }
-        
+
         else
         {
                 return 0;
         }
         Profil.afficherGalerie();
+        */
         return 0;
 }

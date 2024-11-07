@@ -20,6 +20,8 @@ class Utilisateur
         Utilisateur Inscription(); 
         void afficherProfil() const;
         void afficherGalerie() const;
+        void telechargerImage() const;
+        void televerserImage() const;
 
 
     // :) Accesseurs

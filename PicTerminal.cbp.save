@@ -34,8 +34,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Administrateur.h" />
+		<Unit filename="include/Image.h" />
 		<Unit filename="include/Utilisateur.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Administrateur.cpp" />
+		<Unit filename="src/Image.cpp" />
 		<Unit filename="src/Utilisateur.cpp" />
 		<Extensions />
 	</Project>
