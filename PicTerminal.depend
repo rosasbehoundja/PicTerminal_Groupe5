@@ -1,14 +1,15 @@
 # depslib dependency file v1.0
-1730978576 source:/home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/main.cpp
+1730997237 source:/home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/main.cpp
 	<iostream>
 	<cstdlib>
 	"Utilisateur.h"
 	"Image.h"
+	"Administrateur.h"
 
 1730961847 /home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/include/Utilisateur.h
 	<iostream>
 
-1730961886 source:/home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/src/Utilisateur.cpp
+1730985567 source:/home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/src/Utilisateur.cpp
 	"Utilisateur.h"
 	<iostream>
 	<fstream>
@@ -18,13 +19,26 @@
 	<thread>
 	<chrono>
 
-1730978423 source:/home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/src/Image.cpp
+1730978718 source:/home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/src/Image.cpp
 	"Image.h"
 	<iostream>
 	<fstream>
 	<iomanip>
 	<filesystem>
 
-1730978557 /home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/include/Image.h
+1730978688 /home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/include/Image.h
 	<iostream>
+
+1730986952 /home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/include/Administrateur.h
+	<Utilisateur.h>
+
+1730999785 source:/home/rosas/Documents/WORKSPACE/C++/School_TP/PicTerminal/src/Administrateur.cpp
+	"Administrateur.h"
+	<iostream>
+	<fstream>
+	<string>
+	<map>
+	<algorithm>
+	<sstream>
+	<filesystem>
 

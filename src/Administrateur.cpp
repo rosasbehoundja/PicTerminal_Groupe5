@@ -11,6 +11,11 @@
 using namespace std;
 
 //  :) Constructeurs
+
+Administrateur::Administrateur() :Utilisateur()
+{
+
+}
 Administrateur::Administrateur(string id, string name, string email, string password,bool statut)
     : Utilisateur(iD, name, email, password, true)
 {
@@ -24,7 +29,7 @@ Administrateur::~Administrateur()
 }
 
 // :)Autres Methodes
-void Administrateur::approuverImage() const
+void Administrateur::approuverImage() 
 {
     int imageId;
     cout << "Entrez l'ID de l'image à approuver : ";
@@ -37,14 +42,16 @@ void Administrateur::approuverImage() const
         string id, nom, titre, description, nbrTelechargement, idCategorie, proprietaire, statut;
         bool trouve = false;
 
-        while (getline(fichierImages, id, ',')&&
-                getline(fichierImages, nom, ',')&&
-                getline(fichierImages, titre, ',')&&
-                getline(fichierImages, description, ',')&&
-                getline(fichierImages, nbrTelechargement, ',')&&
-                getline(fichierImages, idCategorie, ',')&&
-                getline(fichierImages, proprietaire, ',')&&
-                getline(fichierImages, statut, '\n')) {
+    while (fichierImages.peek()!= EOF)
+        {
+            getline(fichierImages, id, ',');
+            getline(fichierImages, nom, ',');
+            getline(fichierImages, titre, ',');
+            getline(fichierImages, description, ',');
+            getline(fichierImages, nbrTelechargement, ',');
+            getline(fichierImages, idCategorie, ',');
+            getline(fichierImages, proprietaire, ',');
+            getline(fichierImages, statut, '\n');
 
             if (stoi(id) == imageId) {
                 fichierTemp << id << "," << nom << "," << titre << "," << description << "," << nbrTelechargement << "," << idCategorie << "," << proprietaire << ",1" << endl;
@@ -65,10 +72,10 @@ void Administrateur::approuverImage() const
     fichierImages.close();
     fichierTemp.close();
 
-    remove("./data/images.csv");
-    rename("./data/temp.csv", "./data/images.csv");
+    filesystem::remove("./data/images.csv");
+    filesystem::rename("./data/temp.csv", "./data/images.csv");
 }
-void Administrateur::rejeterimage() const
+void Administrateur::rejeterimage() 
 {
     int imageId;
     cout << "Entrez l'ID de l'image à rejeter : ";
@@ -81,14 +88,16 @@ void Administrateur::rejeterimage() const
         string ligne, id, nom, titre, description, nbrTelechargement, idCategorie, proprietaire, statut;
         bool trouve = false;
 
-        while (getline(fichierImages, id, ',')&&
-                getline(fichierImages, nom, ',')&&
-                getline(fichierImages, titre, ',')&&
-                getline(fichierImages, description, ',')&&
-                getline(fichierImages, nbrTelechargement, ',')&&
-                getline(fichierImages, idCategorie, ',')&&
-                getline(fichierImages, proprietaire, ',')&&
-                getline(fichierImages, statut, '\n')) {
+    while (fichierImages.peek()!= EOF)
+        {
+            getline(fichierImages, id, ',');
+            getline(fichierImages, nom, ',');
+            getline(fichierImages, titre, ',');
+            getline(fichierImages, description, ',');
+            getline(fichierImages, nbrTelechargement, ',');
+            getline(fichierImages, idCategorie, ',');
+            getline(fichierImages, proprietaire, ',');
+            getline(fichierImages, statut, '\n');
 
             if (stoi(id) == imageId) {
                 fichierTemp << id << "," << nom << "," << titre << "," << description << "," << nbrTelechargement << "," << idCategorie << "," << proprietaire << ",0" << endl;
@@ -108,11 +117,11 @@ void Administrateur::rejeterimage() const
     fichierImages.close();
     fichierTemp.close();
 
-    remove("./data/images.csv");
-    rename("./data/temp.csv", "./data/images.csv");
+    filesystem::remove("./data/images.csv");
+    filesystem::rename("./data/temp.csv", "./data/images.csv");
 }
-
-void Administrateur::afficherStatistiques() const {
+/*
+void Administrateur::afficherStatistiques() {
 
     int totalImages = 0;
     ifstream fichierImages("./data/images.csv");
@@ -130,16 +139,17 @@ void Administrateur::afficherStatistiques() const {
     fichierImages.open("./data/images.csv");
     if (fichierImages.is_open()) {
         getline(fichierImages, ligne); 
-        while (getline(fichierImages, ligne)) {
-            stringstream ss(ligne);
-            getline(ss, id, ',');
-            getline(ss, nom, ',');
-            getline(ss, titre, ',');
-            getline(ss, description, ',');
-            getline(ss, nbrTelechargement, ',');
-            getline(ss, idCategorie, ',');
-            getline(ss, proprietaire, ',');
-            getline(ss, statut, ',');
+        while (fichierImages.peek()!= EOF)
+        {
+            getline(fichierImages, id, ',');
+            getline(fichierImages, nom, ',');
+            getline(fichierImages, titre, ',');
+            getline(fichierImages, description, ',');
+            getline(fichierImages, nbrTelechargement, ',');
+            getline(fichierImages, idCategorie, ',');
+            getline(fichierImages, proprietaire, ',');
+            getline(fichierImages, statut, '\n');
+
             imagesPopulaires.emplace_back(stoi(nbrTelechargement), titre);
         }
     }
@@ -155,16 +165,17 @@ void Administrateur::afficherStatistiques() const {
     fichierImages.open("./data/images.csv");
     if (fichierImages.is_open()) {
         getline(fichierImages, ligne); 
-        while (getline(fichierImages, ligne)) {
-            stringstream ss(ligne);
-            getline(ss, id, ',');
-            getline(ss, nom, ',');
-            getline(ss, titre, ',');
-            getline(ss, description, ',');
-            getline(ss, nbrTelechargement, ',');
-            getline(ss, idCategorie, ',');
-            getline(ss, proprietaire, ',');
-            getline(ss, statut, ',');
+    while (fichierImages.peek()!= EOF)
+        {
+            getline(fichierImages, id, ',');
+            getline(fichierImages, nom, ',');
+            getline(fichierImages, titre, ',');
+            getline(fichierImages, description, ',');
+            getline(fichierImages, nbrTelechargement, ',');
+            getline(fichierImages, idCategorie, ',');
+            getline(fichierImages, proprietaire, ',');
+            getline(fichierImages, statut, '\n');
+
             imagesParCategorie[idCategorie]++;
         }
     }
@@ -179,16 +190,16 @@ void Administrateur::afficherStatistiques() const {
     fichierImages.open("./data/images.csv");
     if (fichierImages.is_open()) {
         getline(fichierImages, ligne); 
-        while (getline(fichierImages, ligne)) {
-            stringstream ss(ligne);
-            getline(ss, id, ',');
-            getline(ss, nom, ',');
-            getline(ss, titre, ',');
-            getline(ss, description, ',');
-            getline(ss, nbrTelechargement, ',');
-            getline(ss, idCategorie, ',');
-            getline(ss, proprietaire, ',');
-            getline(ss, statut, ',');
+    while (fichierImages.peek()!= EOF)
+        {
+            getline(fichierImages, id, ',');
+            getline(fichierImages, nom, ',');
+            getline(fichierImages, titre, ',');
+            getline(fichierImages, description, ',');
+            getline(fichierImages, nbrTelechargement, ',');
+            getline(fichierImages, idCategorie, ',');
+            getline(fichierImages, proprietaire, ',');
+            getline(fichierImages, statut, '\n');
             imagesParUtilisateur[proprietaire]++;
         }
     }
@@ -198,8 +209,8 @@ void Administrateur::afficherStatistiques() const {
         cout << "- " << utilisateur << " a téléchargé " << nbr << " images" << endl;
     }
 }
-
-void Administrateur::creerCategorie() const{
+*/
+void Administrateur::creerCategorie() {
     string nouveauNom;
     cout << "Entrez le nom de la nouvelle catégorie : ";
     cin >> nouveauNom;
@@ -217,7 +228,7 @@ void Administrateur::creerCategorie() const{
     fichierCategories.close();
 }
 
-void Administrateur::modifierCategorie() const{
+void Administrateur::modifierCategorie() {
     int categorieId;
     string nouveauNom;
 
@@ -234,10 +245,9 @@ void Administrateur::modifierCategorie() const{
         string ligne, id, nom;
         bool trouve = false;
 
-        while (getline(fichierCategories, ligne)) {
-            stringstream ss(ligne);
-            getline(ss, id, ',');
-            getline(ss, nom, ',');
+        while (fichierCategories.peek() !=EOF) {
+            getline(fichierCategories, id, ',');
+            getline(fichierCategories, nom, '\n');
 
             if (stoi(id) == categorieId) {
                 fichierTemp << categorieId << "," << nouveauNom << endl;
@@ -262,7 +272,7 @@ void Administrateur::modifierCategorie() const{
     filesystem::rename("./data/temp.csv", "./data/categories.csv");
 }
 
-void Administrateur::supprimerCategorie() const{
+void Administrateur::supprimerCategorie() {
     int categorieId;
     cout << "Entrez l'ID de la catégorie à supprimer : ";
     cin >> categorieId;
@@ -274,10 +284,9 @@ void Administrateur::supprimerCategorie() const{
         string ligne, id, nom;
         bool trouve = false;
 
-        while (getline(fichierCategories, ligne)) {
-            stringstream ss(ligne);
-            getline(ss, id, ',');
-            getline(ss, nom, ',');
+    while (fichierCategories.peek() !=EOF) {
+            getline(fichierCategories, id, ',');
+            getline(fichierCategories, nom, '\n');
 
             if (stoi(id) != categorieId) {
                 fichierTemp << ligne << endl;
@@ -304,19 +313,14 @@ void Administrateur::supprimerCategorie() const{
 // Methode pour recuperer les prochains iD
 int Administrateur::getNextId() const{
     ifstream fichierCategories("./data/categories.csv");
-    string ligne, id;
-    int maxId = 0;
-
-    if (fichierCategories.is_open()) {
-        while (getline(fichierCategories, ligne)) {
-            stringstream ss(ligne);
-            getline(ss, id, ',');
-            maxId = max(maxId, stoi(id));
-        }
-    } else {
-        cout << "Erreur lors de l'ouverture du fichier categories.csv" << endl;
+    string ligne;
+    int newID = 0;
+    while(fichierCategories.peek()!=EOF)
+    {
+        getline(fichierCategories, ligne);
+        newID+=1;
     }
-
     fichierCategories.close();
-    return maxId + 1;
+
+    return newID;
 }

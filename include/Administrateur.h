@@ -7,16 +7,17 @@
 class Administrateur : public Utilisateur
 {
     public:
+        Administrateur();
         Administrateur(string id, string name, string email, string password,bool statut);
         ~Administrateur();
 
     // :) Autres Methodes
-        void approuverImage() const;
-        void rejeterimage() const;
-        void afficherStatistiques() const;
-        void creerCategorie() const;
-        void supprimerCategorie() const;
-        void modifierCategorie() const;
+        void approuverImage();
+        void rejeterimage();
+        void afficherStatistiques();
+        void creerCategorie();
+        void supprimerCategorie();
+        void modifierCategorie();
         int getNextId() const;
 
     protected:

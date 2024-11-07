@@ -200,11 +200,6 @@ void Utilisateur::telechargerImage() const
 {
 
 }
-void Utilisateur::televerserImage() const
-{
-
-}
-
 
 // :) Accesseurs | Getters
 string Utilisateur::GetiD() const { return iD; }

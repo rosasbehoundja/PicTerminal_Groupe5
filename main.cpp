@@ -3,15 +3,16 @@
 
 #include "Utilisateur.h"
 #include "Image.h"
+#include "Administrateur.h"
 
 using namespace std;
 
 int main()
 {
-        Image Photo;
-        Photo.SetNbr_telechargement();
-        cout << Photo.GetNbr_telechargement() << endl;
-        Photo.afficherDetails();
+        Administrateur admin;
+        admin = Administrateur("6","Admin","admin@example.com","password123",1);
+
+        admin.creerCategorie();
         /*
         Utilisateur Profil;
         string option;
