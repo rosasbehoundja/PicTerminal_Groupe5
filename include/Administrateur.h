@@ -8,7 +8,7 @@ class Administrateur : public Utilisateur
 {
     public:
         Administrateur();
-        Administrateur(string id, string name, string email, string password,bool statut);
+        Administrateur(string name, string email, string password);
         ~Administrateur();
 
     // :) Autres Methodes
@@ -19,6 +19,7 @@ class Administrateur : public Utilisateur
         void supprimerCategorie();
         void modifierCategorie();
         int getNextId() const;
+  
 
     protected:
 

@@ -10,9 +10,10 @@ using namespace std;
 int main()
 {
         Administrateur admin;
-        admin = Administrateur("6","Admin","admin@example.com","password123",1);
+        admin = Administrateur("Rosas", "perrierosas@gmail.com","rosas");
 
-        admin.creerCategorie();
+        admin.afficherProfil();
+        admin.supprimerCategorie();
         /*
         Utilisateur Profil;
         string option;

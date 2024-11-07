@@ -16,8 +16,8 @@ Administrateur::Administrateur() :Utilisateur()
 {
 
 }
-Administrateur::Administrateur(string id, string name, string email, string password,bool statut)
-    : Utilisateur(iD, name, email, password, true)
+Administrateur::Administrateur(string name, string email, string password)
+    : Utilisateur(to_string(getNextId()), name, email, password, true)
 {
 
 }
@@ -53,7 +53,7 @@ void Administrateur::approuverImage()
             getline(fichierImages, proprietaire, ',');
             getline(fichierImages, statut, '\n');
 
-            if (stoi(id) == imageId) {
+            if (id == to_string(imageId)) {
                 fichierTemp << id << "," << nom << "," << titre << "," << description << "," << nbrTelechargement << "," << idCategorie << "," << proprietaire << ",1" << endl;
                 cout << "L'image '" << titre << "' a été approuvée." << endl;
                 trouve = true;
@@ -99,7 +99,7 @@ void Administrateur::rejeterimage()
             getline(fichierImages, proprietaire, ',');
             getline(fichierImages, statut, '\n');
 
-            if (stoi(id) == imageId) {
+            if (id == to_string(imageId)) {
                 fichierTemp << id << "," << nom << "," << titre << "," << description << "," << nbrTelechargement << "," << idCategorie << "," << proprietaire << ",0" << endl;
                 cout << "L'image '" << titre << "' a été rejetée." << endl;
                 trouve = true;
@@ -120,7 +120,7 @@ void Administrateur::rejeterimage()
     filesystem::remove("./data/images.csv");
     filesystem::rename("./data/temp.csv", "./data/images.csv");
 }
-/*
+
 void Administrateur::afficherStatistiques() {
 
     int totalImages = 0;
@@ -209,18 +209,23 @@ void Administrateur::afficherStatistiques() {
         cout << "- " << utilisateur << " a téléchargé " << nbr << " images" << endl;
     }
 }
-*/
+
 void Administrateur::creerCategorie() {
     string nouveauNom;
     cout << "Entrez le nom de la nouvelle catégorie : ";
     cin >> nouveauNom;
 
-    // recuperer ID
-    int nouvelId = getNextId();
+    // code pour gerer un nouvel iD automatiquement pour l'utilisateur
+    int newID = 0;
+    string line;
+    ifstream readFile("./data/categories.csv");
+    while(getline(readFile, line))
+        newID+=1;
+    readFile.close();
 
     ofstream fichierCategories("./data/categories.csv", ios::app);
     if (fichierCategories.is_open()) {
-        fichierCategories << nouvelId << "," << nouveauNom << endl;
+        fichierCategories << newID << ',' << nouveauNom << endl;
         cout << "La catégorie '" << nouveauNom << "' a été créée avec succès." << endl;
     } else {
         cout << "Erreur lors de l'ouverture du fichier categories.csv" << endl;
@@ -242,19 +247,19 @@ void Administrateur::modifierCategorie() {
     ofstream fichierTemp("./data/temp.csv");
 
     if (fichierCategories.is_open() && fichierTemp.is_open()) {
-        string ligne, id, nom;
+        string id, nom;
         bool trouve = false;
 
         while (fichierCategories.peek() !=EOF) {
             getline(fichierCategories, id, ',');
             getline(fichierCategories, nom, '\n');
 
-            if (stoi(id) == categorieId) {
+            if (id == to_string(categorieId)) {
                 fichierTemp << categorieId << "," << nouveauNom << endl;
                 cout << "La catégorie '" << nom << "' a été modifiée en '" << nouveauNom << "'." << endl;
                 trouve = true;
             } else {
-                fichierTemp << ligne << endl;
+                fichierTemp << id << "," << nom << endl;
             }
         }
 
@@ -288,14 +293,13 @@ void Administrateur::supprimerCategorie() {
             getline(fichierCategories, id, ',');
             getline(fichierCategories, nom, '\n');
 
-            if (stoi(id) != categorieId) {
-                fichierTemp << ligne << endl;
+            if (id != to_string(categorieId)) {
+                fichierTemp << id << "," << nom << endl;
             } else {
                 cout << "La catégorie '" << nom << "' a été supprimée." << endl;
                 trouve = true;
             }
         }
-
         if (!trouve) {
             cout << "Catégorie introuvable." << endl;
         }
