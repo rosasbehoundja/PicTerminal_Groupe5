@@ -10,6 +10,8 @@ PicTerminal est une application CLI (Command Line Interface) pour l'administrati
 - 📥 Téléchargement d'images
 - 🔑 Système de droits d'accès (administrateur/utilisateur)
 - 📊 Suivi des téléchargements
+- 💜 Gestion des favoris
+- 🚩 Gestion des Categories
 
 ## Prérequis
 
@@ -61,13 +63,21 @@ git push -u origin <NOM_DE_VOTRE_BRANCHE>
 ```
 PicTerminal/
 ├── src/
-│   ├── main.cpp
-│   └── utilisateur.cpp
+│   ├── Administrateur.cpp
+│   ├── Image.cpp
+│   └── Utilisateur.cpp
 ├── include/
-│   └── utilisateur.h
+│   ├── Administrateur.h
+│   ├── Iamge.h
+│   └── Htilisateur.h
 ├── data/
+│   ├── categories.csv
+│   ├── favoris.csv
+│   ├── images.csv
 │   └── users.csv
-└── README.md
+├── main.cpp
+└── Readme.md
+
 ```
 
 ## Licence
@@ -76,8 +86,8 @@ Ce projet est sous licence [à spécifier]
 
 ## Contact
 
-- Auteur :  
-- Email : 
+- Auteur :  Rosas Behoundja
+- Email : [Rosas Perrier](perrierosas@gmail.com)
 - GitHub : [@rosasbehoundja](https://github.com/rosasbehoundja)
 
 ## Remerciements
