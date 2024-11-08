@@ -17,7 +17,7 @@ Administrateur::Administrateur() :Utilisateur()
 
 }
 Administrateur::Administrateur(string name, string email, string password)
-    : Utilisateur(to_string(getNextId()), name, email, password, true)
+    : Utilisateur(to_string(getNextUserId()), name, email, password, true)
 {
 
 }
@@ -30,7 +30,7 @@ Administrateur::~Administrateur()
 
 // :)Autres Methodes
 
-// ################################################ Gestion des Images #####################################################3
+// ################################################ Gestion des Images #####################################################
 void Administrateur::approuverImage() 
 {
     int imageId;
@@ -214,6 +214,21 @@ void Administrateur::afficherStatistiques() {
 }
 
 // ################################################# Gestion des categories ##################################################
+void Administrateur::afficherCategories() 
+{
+    string id, nom;
+
+    ifstream readFile("./data/categories.csv");
+    while(readFile.peek() != EOF)
+    {
+        getline(readFile, id, ',');
+        getline(readFile, nom, '\n');
+
+        cout << id << ":" << nom << endl;
+    }
+    readFile.close();
+}
+
 void Administrateur::creerCategorie() {
     string nouveauNom;
     cout << "Entrez le nom de la nouvelle catégorie : ";
@@ -318,6 +333,84 @@ void Administrateur::supprimerCategorie() {
     filesystem::rename("./data/temp.csv", "./data/categories.csv");
 }
 
+void Administrateur::ajouterImageCategorie() {
+
+        string imageId, categorieId;
+
+        cout << "Entrez l'ID de votre Image : ";
+        getline(cin, imageId);
+        cout << "EEntrez l'ID de la categorie : ";
+        getline(cin, categorieId);
+        cout << endl;
+
+        ifstream fichierLecture("images.csv");
+        ofstream fichierEcriture("temp.csv");
+        
+        string id, nom, titre, description, nbrTelechargement, proprietaire, statut ,catId;
+        
+        while (fichierLecture.peek()!= EOF)
+        {
+            getline(fichierLecture, id, ',');
+            getline(fichierLecture, nom, ',');
+            getline(fichierLecture, titre, ',');
+            getline(fichierLecture, description, ',');
+            getline(fichierLecture, nbrTelechargement, ',');
+            getline(fichierLecture, catId, ',');
+            getline(fichierLecture, proprietaire, ',');
+            getline(fichierLecture, statut, '\n');            
+            
+            if (id == imageId) {
+                catId = categorieId;
+            }
+            fichierEcriture << id << "," << nom << "," << titre << "," << description << "," 
+                            << nbrTelechargement << "," << catId << "," << proprietaire << "," << statut << std::endl;
+        }
+        
+        fichierLecture.close();
+        fichierEcriture.close();
+
+        filesystem::rename("temp.csv", "images.csv");
+    }
+
+// Supprimer une image d'une catégorie
+void Administrateur::supprimerImageCategorie() {
+        
+        string imageId, categorieId;
+
+        cout << "Entrez l'ID de votre Image : ";
+        getline(cin, imageId);
+        cout << endl;
+
+        ifstream fichierLecture("images.csv");
+        ofstream fichierEcriture("temp.csv");
+        
+        string id, nom, titre, description, nbrTelechargement, proprietaire, statut ,catId;
+        
+        while (fichierLecture.peek()!= EOF)
+        {
+            getline(fichierLecture, id, ',');
+            getline(fichierLecture, nom, ',');
+            getline(fichierLecture, titre, ',');
+            getline(fichierLecture, description, ',');
+            getline(fichierLecture, nbrTelechargement, ',');
+            getline(fichierLecture, catId, ',');
+            getline(fichierLecture, proprietaire, ',');
+            getline(fichierLecture, statut, '\n');            
+            
+            if (id == imageId) {
+                catId = categorieId; // Mise à jour de la catégorie
+            }
+            fichierEcriture << id << "," << nom << "," << titre << "," << description << "," 
+                            << nbrTelechargement << "," << "6" << "," << proprietaire << "," << statut << std::endl;
+        }
+        
+        fichierLecture.close();
+        fichierEcriture.close();
+        
+        // Remplacement du fichier original par le fichier temporaire
+        filesystem::rename("temp.csv", "images.csv");
+}
+
 // Methode pour recuperer les prochains iD
 int Administrateur::getNextId() const{
     ifstream fichierCategories("./data/categories.csv");
@@ -332,6 +425,21 @@ int Administrateur::getNextId() const{
 
     return newID;
 }
+
+int Administrateur::getNextUserId() const{
+    ifstream fichierUsers("./data/users.csv");
+    string ligne;
+    int newID = 0;
+    while(fichierUsers.peek()!=EOF)
+    {
+        getline(fichierUsers, ligne);
+        newID+=1;
+    }
+    fichierUsers.close();
+
+    return newID;
+}
+
 
 // ############################################### Gestion des utilisateurs #################################################
 void Administrateur::afficherUtilisateurs() const {

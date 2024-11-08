@@ -36,7 +36,7 @@ Utilisateur::Utilisateur(string id, string name, string email, string password,b
     Nom = name;
     Email = email;
     Password = password;
-    Statut = false;
+    Statut = statut;
 }
 
 // :)Destructeur
@@ -80,7 +80,15 @@ Utilisateur Utilisateur::seConnecter()
 
         if ((mail_co == mail) && (passw_co== passw)) // si les entrees correspondent a un profil present dans le dataset
         {
-            user = Utilisateur(id, nom, mail, passw, statut=="0");
+            bool privilege;
+            if ("1" == statut)
+                privilege = true;
+            else
+                privilege = false;
+            
+            cout << privilege <<endl;
+            user = Utilisateur(id, nom, mail, passw, privilege);
+            cout << user.GetStatut() << endl;
             cout << "CONNECTE....." << endl;
             trouve = true;
             break;// notifier que l'utilisateur a ete retrouve dans le dataset
@@ -160,6 +168,10 @@ void Utilisateur::afficherProfil() const
     cout << "\t\t\t\t---------------------------------------------------------" << endl;
 }
 
+bool Utilisateur::isAdmin() const {
+    return Statut; 
+}
+
 // ############################################ Interactions avec les images ################################################
 void Utilisateur::afficherGalerie() const
 {
@@ -234,7 +246,7 @@ void Utilisateur::afficherToutesLesImages() const
     cout << "\n\t~~~~~~~~~~~~~ TOUTES LES IMAGES ~~~~~~~~~~~~" << endl;
 
 
-    cout << "\t" << left << setw(5) << "ID" << setw(25) << "Titre" << setw(20) << "Catégorie" << right << setw(10) << "Note" << setw(15) << "Téléchargement" << endl;
+    cout << "\t" << left << setw(5) << "ID" << setw(25) << "Titre" << setw(20) << "Catégorie" << right << setw(15) << "Téléchargement" << endl;
     cout << "\t" << string(75, '-') << endl;
 
     getline(image_data, idImage);
@@ -445,7 +457,7 @@ bool Utilisateur::verifierExistenceImage(int imageId) const {
 string Utilisateur::GetiD() const { return iD; }
 string Utilisateur::GetNom() const { return Nom; }
 string Utilisateur::GetEmail() const { return Email; }
-bool Utilisateur::GetStatut() { return Statut; }
+bool Utilisateur::GetStatut() const { return Statut; }
 string Utilisateur::GetPassword() const { return Password; }
 
 

@@ -14,11 +14,19 @@ class Administrateur : public Utilisateur
     // :) Autres Methodes
         void approuverImage();
         void rejeterimage();
+
         void afficherStatistiques();
+
+        void afficherCategories();
         void creerCategorie();
         void supprimerCategorie();
         void modifierCategorie();
+        void ajouterImageCategorie();
+        void supprimerImageCategorie();
+
         int getNextId() const;
+        int getNextUserId() const;
+
         void afficherUtilisateurs() const;
         void ajouterUtilisateur() const;
         void modifierUtilisateur() const;
