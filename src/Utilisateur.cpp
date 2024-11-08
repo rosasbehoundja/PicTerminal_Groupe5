@@ -201,7 +201,7 @@ void Utilisateur::afficherGalerie() const
         getline(image_data, proprietaire, ',');
         getline(image_data, statut, '\n');
 
-        if (GetNom()== proprietaire && statut == "1")// si l'image est publique et approuvee, l'afficher
+        if (GetNom()== proprietaire)// si l'image est publique et approuvee, l'afficher
         {
             cout << "\t" << left << setw(5) << idImage << setw(25) << titre << setw(20) << idCategories << right << setw(10) << nbr_telechargement << setw(15) << endl;
             cout << "\t" << string(75, '-') << endl;
@@ -279,8 +279,10 @@ void Utilisateur::televerserImage() const
     cout << "\n~~~~~~~~~~~~~ TELEVERSER UNE IMAGE ~~~~~~~~~~~~" << endl;
     cout << "Nom (exemple: sunset.jpg) : ";
     getline(cin, nom_fichier);
+    cout << endl;
     cout << "Titre : ";
     getline(cin, titre);
+    cout << endl;
     cout << "Description : ";
     getline(cin, description);
     cout << endl;
