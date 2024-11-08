@@ -20,8 +20,14 @@ class Utilisateur
         Utilisateur Inscription(); 
         void afficherProfil() const;
         void afficherGalerie() const;
+        void afficherToutesLesImages() const;
         void telechargerImage() const;
         void televerserImage() const;
+        void ajouterAuxFavoris(int imageId) const;
+        void retirerDesFavoris(int imageId) const;
+        void afficherFavoris() const;
+        bool estDansFavoris(int imageId) const;
+        bool verifierExistenceImage(int imageId) const;
 
 
     // :) Accesseurs

@@ -1,4 +1,5 @@
 #include "Utilisateur.h"
+#include "Image.h"
 
 #include <iostream>
 #include <fstream>
@@ -7,6 +8,7 @@
 #include <cstdlib>
 #include <thread>
 #include <chrono>
+#include <filesystem>
 
 using namespace std;
 
@@ -158,6 +160,7 @@ void Utilisateur::afficherProfil() const
     cout << "\t\t\t\t---------------------------------------------------------" << endl;
 }
 
+// ############################################ Interactions avec les images ################################################
 void Utilisateur::afficherGalerie() const
 {
     // recuperer images de images.csv
@@ -167,7 +170,7 @@ void Utilisateur::afficherGalerie() const
     if (!image_data.is_open())
         cout << "Error File Opening!";
 
-    cout << "\n\t~~~~~~~~~~~~~ TOUTES LES IMAGES PUBLIQUES ~~~~~~~~~~~~" << endl;
+    cout << "\n\t~~~~~~~~~~~~~ MA GALERIE ~~~~~~~~~~~~" << endl;
 
 
     cout << "\t" << left << setw(5) << "ID" << setw(25) << "Titre" << setw(20) << "Catégorie" << right << setw(10) << "Note" << setw(15) << "Téléchargement" << endl;
@@ -196,10 +199,239 @@ void Utilisateur::afficherGalerie() const
     return;
 }
 
-void Utilisateur::telechargerImage() const
-{
 
+void Utilisateur::telechargerImage() const {
+    int imageId;
+    cout << "\nEntrez l'ID de l'image à télécharger : ";
+    cin >> imageId;
+    
+    if (!verifierExistenceImage(imageId)) {
+        cout << "Image introuvable." << endl;
+        return;
+    }
+    
+    cout << "Téléchargement en cours";
+    for(int i = 0; i < 3; i++) {
+        this_thread::sleep_for(chrono::seconds(1));
+        cout << "." << flush;
+    }
+    cout << endl;
+
+    Image img;
+    img.incrementerTelechargements(img, imageId);
+    
+    cout << "Téléchargement terminé avec succès!" << endl;
 }
+void Utilisateur::afficherToutesLesImages() const
+{
+    // recuperer images de images.csv
+    ifstream image_data("./data/images.csv");
+    string idImage,nom,titre,description,nbr_telechargement,idCategories,proprietaire,statut;
+
+    if (!image_data.is_open())
+        cout << "Error File Opening!";
+
+    cout << "\n\t~~~~~~~~~~~~~ TOUTES LES IMAGES ~~~~~~~~~~~~" << endl;
+
+
+    cout << "\t" << left << setw(5) << "ID" << setw(25) << "Titre" << setw(20) << "Catégorie" << right << setw(10) << "Note" << setw(15) << "Téléchargement" << endl;
+    cout << "\t" << string(75, '-') << endl;
+
+    getline(image_data, idImage);
+    // afficher toutes les images
+    while (image_data.peek()!= EOF)
+    {
+        getline(image_data, idImage, ',');
+        getline(image_data, nom, ',');
+        getline(image_data, titre, ',');
+        getline(image_data, description, ',');
+        getline(image_data, nbr_telechargement, ',');
+        getline(image_data, idCategories, ',');
+        getline(image_data, proprietaire, ',');
+        getline(image_data, statut, '\n');
+
+        if (statut == "1")// si l'image est publique et approuvee, l'afficher
+        {
+            cout << "\t" << left << setw(5) << idImage << setw(25) << titre << setw(20) << idCategories << right << setw(10) << nbr_telechargement << setw(15) << endl;
+            cout << "\t" << string(75, '-') << endl;
+        }
+    }
+    image_data.close();
+    return;
+}
+
+void Utilisateur::televerserImage() const
+{
+    string nom_fichier, titre, description;
+
+    cout << "\n~~~~~~~~~~~~~ TELEVERSER UNE IMAGE ~~~~~~~~~~~~" << endl;
+    cout << "Nom (exemple: sunset.jpg) : ";
+    getline(cin, nom_fichier);
+    cout << "Titre : ";
+    getline(cin, titre);
+    cout << "Description : ";
+    getline(cin, description);
+    cout << endl;
+    
+    try {
+        // nouvel ID image
+        int newID = 1;
+        string line;
+        ifstream readFile("./data/images.csv");
+        while(getline(readFile, line)) newID++;
+        readFile.close();
+        
+        // ajouter image a images.csv
+        ofstream imageFile;
+        imageFile.open("./data/images.csv", ios::app);
+        if(!imageFile.is_open()) return;
+        
+        // imgID,Nom,Titre,Description,Nbr_telechargement,Note,Est_approuvee,Est_publique,Categorie
+        imageFile << newID << "," 
+                 << nom_fichier << "," 
+                 << titre << "," 
+                 << description << ","
+                 << "0" << "," // Nbr_telechargement initial
+                 << "6" << "," // categorie initiale
+                 << GetNom() << "," // proprietaire
+                 << false // Est_approuvee initial
+                 << endl;
+        
+        imageFile.close();
+        cout << "\nImage enregistree..." << endl;
+        return;
+    }
+    catch(...) {
+        cout << "\nErreur lors du telechargement de l'image." << endl;
+        return;
+    }
+    return;
+}
+// ########################################### gestion des favoris #########################################################
+void Utilisateur::ajouterAuxFavoris(int imageId) const {
+    if (!verifierExistenceImage(imageId)) {
+        cout << "Image introuvable." << endl;
+        return;
+    }
+    
+    if (estDansFavoris(imageId)) {
+        cout << "Cette image est déjà dans vos favoris." << endl;
+        return;
+    }
+    
+    ofstream favorisFile("./data/favoris.csv", ios::app);
+    if (favorisFile.is_open()) {
+        favorisFile << GetiD() << "," << imageId << endl;
+        cout << "Image ajoutée aux favoris avec succès!" << endl;
+    } else {
+        cout << "Erreur lors de l'ajout aux favoris." << endl;
+    }
+    favorisFile.close();
+}
+
+
+void Utilisateur::retirerDesFavoris(int imageId) const {
+    if (!estDansFavoris(imageId)) {
+        cout << "Cette image n'est pas dans vos favoris." << endl;
+        return;
+    }
+    string id, ligne;
+    ifstream favorisIn("./data/favoris.csv");
+    ofstream favorisTemp("./data/temp.csv");
+    
+    string userId, imgId;
+    while (favorisIn.peek() != EOF) {
+
+        getline(favorisIn, userId, ',');
+        getline(favorisIn, imgId,'\n');
+        if (!(userId == GetiD() && imgId == to_string(imageId))) {
+            favorisTemp << userId << "," << imgId << endl;
+        }
+    }
+    favorisIn.close();
+    favorisTemp.close();
+    
+    filesystem::remove("./data/favoris.csv");
+    filesystem::rename("./data/temp.csv", "./data/favoris.csv");
+    
+    cout << "Image retirée des favoris avec succès!" << endl;
+}
+
+
+void Utilisateur::afficherFavoris() const {
+    cout << "\n\t~~~~~~~~~~~~~ MES FAVORIS ~~~~~~~~~~~~" << endl;
+    cout << "\t" << left << setw(5) << "ID" << setw(25) << "Titre" << setw(20) << "Catégorie" << endl;
+    cout << "\t" << string(50, '-') << endl;
+    
+    ifstream favorisFile("./data/favoris.csv");
+    string userId, imageId;
+    
+    while (favorisFile.peek() != EOF) {
+
+        getline(favorisFile, userId, ',');
+        getline(favorisFile, imageId,'\n');
+        if (userId == GetiD()) {
+
+            //details de l'image
+            ifstream imagesFile("./data/images.csv");
+            string id, nom, titre, description, downloads, categorie, proprietaire, statut;
+            
+            while (imagesFile.peek() != EOF) {
+                getline(imagesFile, id, ',');
+                getline(imagesFile, nom, ',');
+                getline(imagesFile, titre, ',');
+                getline(imagesFile, description, ',');
+                getline(imagesFile, downloads, ',');
+                getline(imagesFile, categorie, ',');
+                getline(imagesFile, proprietaire, ',');
+                getline(imagesFile, statut,'\n');
+                
+                if (id == imageId) {
+                    cout << "\t" << left << setw(5) << id << setw(25) << titre << setw(20) << categorie << endl;
+                    break;
+                }
+            }
+            imagesFile.close();
+        }
+    }
+    favorisFile.close();
+    cout << "\t" << string(50, '-') << endl;
+}
+
+bool Utilisateur::estDansFavoris(int imageId) const {
+    ifstream favorisFile("./data/favoris.csv");
+    string userId, imgId;
+    
+    while (favorisFile.peek() != EOF) {
+
+        getline(favorisFile, userId, ',');
+        getline(favorisFile, imgId,'\n');
+        if (userId == GetiD() && imgId == to_string(imageId)) {
+            favorisFile.close();
+            return true;
+        }
+    }
+    favorisFile.close();
+    return false;
+}
+
+bool Utilisateur::verifierExistenceImage(int imageId) const {
+    ifstream imagesFile("./data/images.csv");
+    string id, ligne;
+    
+    while (imagesFile.peek() !=EOF) {
+
+        getline(imagesFile, id, ',');
+        getline(imagesFile, ligne);
+        if (id == to_string(imageId)) {
+            imagesFile.close();
+            return true;
+        }
+    }
+    imagesFile.close();
+    return false;
+}
+
 
 // :) Accesseurs | Getters
 string Utilisateur::GetiD() const { return iD; }

@@ -8,7 +8,7 @@ id,nom,titre,description,nbr_telechargement,idCategories,proprietaire,statut
 7,nature_03.jpg,Montagne enneigée,Pic de montagne recouvert de neige,0,1,Alice,1
 8,animaux_02.jpg,Éléphant,Un éléphant marchant dans la savane,0,2,Bob,1
 9,architecture_02.jpg,Ancienne cathédrale,Cathédrale ancienne avec de belles arches,0,3,Charlie,1
-10,technologie_02.jpg,Écran LED,Gros plan sur un écran LED,0,4,David,1
+10,technologie_02.jpg,Écran LED,Gros plan sur un écran LED,1,4,David,1
 11,personnes_02.jpg,Couple,Couple marchant dans un parc,0,5,Eva,1
 12,nature_04.jpg,Rivière en forêt,Rivière serpentant à travers la forêt,0,1,Alice,1
 13,animaux_03.jpg,Chien joueur,Chien courant sur la plage,0,2,Bob,1

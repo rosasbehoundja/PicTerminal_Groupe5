@@ -12,8 +12,7 @@ int main()
         Administrateur admin;
         admin = Administrateur("Rosas", "perrierosas@gmail.com","rosas");
 
-        admin.afficherProfil();
-        admin.supprimerCategorie();
+        admin.televerserImage();
         /*
         Utilisateur Profil;
         string option;

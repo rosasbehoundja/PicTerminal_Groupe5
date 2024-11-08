@@ -29,6 +29,8 @@ Administrateur::~Administrateur()
 }
 
 // :)Autres Methodes
+
+// ################################################ Gestion des Images #####################################################3
 void Administrateur::approuverImage() 
 {
     int imageId;
@@ -121,6 +123,7 @@ void Administrateur::rejeterimage()
     filesystem::rename("./data/temp.csv", "./data/images.csv");
 }
 
+// ################################################# Affichage des statistiques ##############################################
 void Administrateur::afficherStatistiques() {
 
     int totalImages = 0;
@@ -210,6 +213,7 @@ void Administrateur::afficherStatistiques() {
     }
 }
 
+// ################################################# Gestion des categories ##################################################
 void Administrateur::creerCategorie() {
     string nouveauNom;
     cout << "Entrez le nom de la nouvelle catégorie : ";
@@ -327,4 +331,197 @@ int Administrateur::getNextId() const{
     fichierCategories.close();
 
     return newID;
+}
+
+// ############################################### Gestion des utilisateurs #################################################
+void Administrateur::afficherUtilisateurs() const {
+    ifstream usersFile("./data/users.csv");
+    string id, nom, email, password, statut;
+    
+    cout << "\n\t~~~~~~~~~~~~~ LISTE DES UTILISATEURS ~~~~~~~~~~~~" << endl;
+    cout << "\t" << left << setw(5) << "ID" << setw(20) << "Nom" << setw(30) 
+         << "Email" << setw(10) << "Statut" << endl;
+    cout << "\t" << string(65, '-') << endl;
+    
+    while (usersFile.peek() != EOF) {
+        getline(usersFile, id, ',');
+        getline(usersFile, nom, ',');
+        getline(usersFile, email, ',');
+        getline(usersFile, password, ',');
+        getline(usersFile, statut);
+        
+        string statutText = (statut == "1") ? "Administrateur" : "Utilisateur";
+        cout << "\t" << left << setw(5) << id << setw(20) << nom 
+             << setw(30) << email << setw(10) << statutText << endl;
+    }
+    cout << "\t" << string(65, '-') << endl;
+    usersFile.close();
+}
+
+void Administrateur::ajouterUtilisateur() const {
+    string nom, email, password;
+    
+    cout << "Entrez le nom de l'utilisateur : ";
+    cin >> nom;
+    cout << "Entrez l'email de l'utilisateur : ";
+    cin >> email;
+    cout << "Entrez le mot de passe de l'utilisateur : ";
+    cin >> password;
+    
+    // Générer un nouvel ID
+    int newId = 0;
+    string line;
+    ifstream readFile("./data/users.csv");
+    while(getline(readFile, line)) newId++;
+    readFile.close();
+    
+    ofstream usersFile("./data/users.csv", ios::app);
+    if (usersFile.is_open()) {
+        usersFile << newId << "," << nom << "," << email << "," << password << ",1" << endl;
+        cout << "Utilisateur ajouté avec succès!" << endl;
+    } else {
+        cout << "Erreur lors de l'ajout de l'utilisateur." << endl;
+    }
+    usersFile.close();
+}
+
+void Administrateur::modifierUtilisateur() const {
+    string userId;
+    cout << "Entrez l'ID de l'utilisateur à modifier : ";
+    cin >> userId;
+    
+    if (!verifierExistenceUtilisateur(userId)) {
+        cout << "Utilisateur introuvable." << endl;
+        return;
+    }
+    
+    string nouveauNom, nouvelEmail, nouveauPassword;
+    cout << "Nouveau nom (ou entrée pour garder l'ancien) : ";
+    cin.ignore();
+    getline(cin, nouveauNom);
+    cout << "Nouvel email (ou entrée pour garder l'ancien) : ";
+    getline(cin, nouvelEmail);
+    cout << "Nouveau mot de passe (ou entrée pour garder l'ancien) : ";
+    getline(cin, nouveauPassword);
+    
+    ifstream usersIn("./data/users.csv");
+    ofstream usersTemp("./data/users_temp.csv");
+    
+    string id, nom, email, password, statut;
+    while (usersIn.peek() != EOF) {
+        getline(usersIn, id, ',');
+        getline(usersIn, nom, ',');
+        getline(usersIn, email, ',');
+        getline(usersIn, password, ',');
+        getline(usersIn, statut,'\n');
+        
+        if (id == userId) {
+            usersTemp << id << ","
+                     << (nouveauNom.empty() ? nom : nouveauNom) << ","
+                     << (nouvelEmail.empty() ? email : nouvelEmail) << ","
+                     << (nouveauPassword.empty() ? password : nouveauPassword) << ","
+                     << statut << endl;
+        } else {
+            usersTemp << id << "," << nom << "," << email << "," 
+                     << password << "," << statut << endl;
+        }
+    }
+    
+    usersIn.close();
+    usersTemp.close();
+    
+    filesystem::remove("./data/users.csv");
+    filesystem::rename("./data/users_temp.csv", "./data/users.csv");
+    
+    cout << "Utilisateur modifié avec succès!" << endl;
+}
+
+void Administrateur::suspendreUtilisateur() const {
+    string userId;
+    cout << "Entrez l'ID de l'utilisateur à suspendre/réactiver : ";
+    cin >> userId;
+    
+    if (!verifierExistenceUtilisateur(userId)) {
+        cout << "Utilisateur introuvable." << endl;
+        return;
+    }
+    
+    ifstream usersIn("./data/users.csv");
+    ofstream usersTemp("./data/users_temp.csv");
+    
+    string id, nom, email, password, statut;
+    while (usersIn.peek() != EOF) {
+        getline(usersIn, id, ',');
+        getline(usersIn, nom, ',');
+        getline(usersIn, email, ',');
+        getline(usersIn, password, ',');
+        getline(usersIn, statut,'\n');
+    {
+        
+        if (id == userId) {
+            string nouveauStatut = (statut == "1") ? "0" : "1";
+            usersTemp << id << "," << nom << "," << email << "," 
+                     << password << "," << nouveauStatut << endl;
+            cout << "Utilisateur " << (nouveauStatut == "1" ? "réactivé" : "suspendu") 
+                 << " avec succès!" << endl;
+        } else {
+            usersTemp << id << "," << nom << "," << email << "," 
+                     << password << "," << statut << endl;
+        }
+    }
+    
+    usersIn.close();
+    usersTemp.close();
+    
+    filesystem::remove("./data/users.csv");
+    filesystem::rename("./data/users_temp.csv", "./data/users.csv");
+    }
+}
+
+void Administrateur::supprimerUtilisateur() const {
+    string userId;
+    cout << "Entrez l'ID de l'utilisateur à supprimer : ";
+    cin >> userId;
+    
+    if (!verifierExistenceUtilisateur(userId)) {
+        cout << "Utilisateur introuvable." << endl;
+        return;
+    }
+    
+    ifstream usersIn("./data/users.csv");
+    ofstream usersTemp("./data/users_temp.csv");
+    
+    string id, ligne;
+    while (getline(usersIn, id, ',') && getline(usersIn, ligne)) {
+        if (id != userId) {
+            usersTemp << id << "," << ligne << endl;
+        }
+    }
+    
+    usersIn.close();
+    usersTemp.close();
+    
+    filesystem::remove("./data/users.csv");
+    filesystem::rename("./data/users_temp.csv", "./data/users.csv");
+    
+    cout << "Utilisateur supprimé avec succès!" << endl;
+}
+
+bool Administrateur::verifierExistenceUtilisateur(const string& userId) const {
+    ifstream usersFile("./data/users.csv");
+    string id, nom, email, password, statut;
+    
+    while (usersFile.peek() != EOF) {
+        getline(usersFile, id, ',');
+        getline(usersFile, nom, ',');
+        getline(usersFile, email, ',');
+        getline(usersFile, password, ',');
+        getline(usersFile, statut,'\n');
+        if (id == userId) {
+            usersFile.close();
+            return true;
+        }
+    }
+    usersFile.close();
+    return false;
 }
