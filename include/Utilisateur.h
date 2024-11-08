@@ -23,8 +23,8 @@ class Utilisateur
         void afficherToutesLesImages() const;
         void telechargerImage() const;
         void televerserImage() const;
-        void ajouterAuxFavoris(int imageId) const;
-        void retirerDesFavoris(int imageId) const;
+        void ajouterAuxFavoris() const;
+        void retirerDesFavoris() const;
         void afficherFavoris() const;
         bool estDansFavoris(int imageId) const;
         bool verifierExistenceImage(int imageId) const;

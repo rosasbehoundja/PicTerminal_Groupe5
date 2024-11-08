@@ -308,7 +308,11 @@ void Utilisateur::televerserImage() const
     return;
 }
 // ########################################### gestion des favoris #########################################################
-void Utilisateur::ajouterAuxFavoris(int imageId) const {
+void Utilisateur::ajouterAuxFavoris() const {
+    int imageId;
+    cout << "Entrez l'id de l'image a ajoute en favoris : ";
+    cin >> imageId;
+    cout << endl;
     if (!verifierExistenceImage(imageId)) {
         cout << "Image introuvable." << endl;
         return;
@@ -330,7 +334,11 @@ void Utilisateur::ajouterAuxFavoris(int imageId) const {
 }
 
 
-void Utilisateur::retirerDesFavoris(int imageId) const {
+void Utilisateur::retirerDesFavoris() const {
+    int imageId;
+    cout << "Entrez l'id de l'image a ajoute en favoris : ";
+    cin >> imageId;
+    cout << endl;
     if (!estDansFavoris(imageId)) {
         cout << "Cette image n'est pas dans vos favoris." << endl;
         return;
